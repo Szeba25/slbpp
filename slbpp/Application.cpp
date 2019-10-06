@@ -29,6 +29,7 @@ void Application::run() {
 
 		// Rendering.
 		renderer->clear();
+		renderer->test();
 
 		// Swap buffers.
 		glfwSwapBuffers(window);
