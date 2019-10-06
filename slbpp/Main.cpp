@@ -3,18 +3,9 @@
 
 #include <iostream>
 
-void framebufferSizeCallback(GLFWwindow* window, int width, int height) {
-	glViewport(0, 0, width, height);
-}
-
-void processInput(GLFWwindow* window) {
-	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
-		glfwSetWindowShouldClose(window, true);
-	}
-}
+#include "Application.h"
 
 int main() {
-	
 	// Initialize GLFW with OpenGL Version 3.3 and core profile.
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -36,25 +27,9 @@ int main() {
 		return -1;
 	}
 
-	// Set the viewport to match the window size.
-	glViewport(0, 0, 1280, 720);
-
-	// Set viewport resize callback function.
-	glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);
-
-	// Loop until the GLFW window is closed.
-	while (!glfwWindowShouldClose(window)) {
-		// Input.
-		processInput(window);
-
-		// Rendering.
-		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
-
-		// Swap buffers.
-		glfwSwapBuffers(window);
-		glfwPollEvents();
-	}
+	// Create the application with this window pointer.
+	Application application(window);
+	application.run();
 
 	// Terminate the GLFW window.
 	glfwTerminate();
