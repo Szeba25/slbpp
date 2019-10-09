@@ -25,6 +25,12 @@
     <Filter Include="Header Files\App">
       <UniqueIdentifier>{15b2c5e8-eaa5-45b8-ae8e-e36bd3544dd3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\System">
+      <UniqueIdentifier>{a58a03e1-d108-4364-8674-cff9bc011a70}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\System">
+      <UniqueIdentifier>{1635c459-aeca-474c-8b82-5f5255e698ad}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -45,6 +51,9 @@
     <ClCompile Include="Input.cpp">
       <Filter>Source Files\App</Filter>
     </ClCompile>
+    <ClCompile Include="Shader.cpp">
+      <Filter>Source Files\System</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stb_image.h">
@@ -59,5 +68,16 @@
     <ClInclude Include="Input.h">
       <Filter>Header Files\App</Filter>
     </ClInclude>
+    <ClInclude Include="Shader.h">
+      <Filter>Header Files\System</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="test.frag">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="test.vert">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

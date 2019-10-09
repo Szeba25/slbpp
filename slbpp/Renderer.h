@@ -6,11 +6,11 @@
 #include <iostream>
 #include <vector>
 
+#include "Shader.h"
+
 class Renderer {
 private:
-	unsigned int vertexShader;
-	unsigned int fragmentShader;
-	unsigned int shaderProgram;
+	std::unique_ptr<Shader> shader;
 
 	std::vector<float> vertices;
 	unsigned int VBO;
