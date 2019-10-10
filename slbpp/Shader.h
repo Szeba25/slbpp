@@ -19,6 +19,7 @@ public:
 	Shader(const std::string& vertName, const std::string& fragName);
 	virtual ~Shader();
 
+	unsigned int getID();
 	void use();
 };
 

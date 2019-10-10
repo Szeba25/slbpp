@@ -26,10 +26,37 @@ void Application::run() {
 		if (input->isKeyPressed(Key::ESCAPE)) {
 			glfwSetWindowShouldClose(window, true);
 		}
+		if (input->isKeyPressed(Key::LEFT)) {
+			renderer->translateView(1.0f, 0.0f);
+		}
+		if (input->isKeyPressed(Key::RIGHT)) {
+			renderer->translateView(-1.0f, 0.0f);
+		}
+		if (input->isKeyPressed(Key::DOWN)) {
+			renderer->translateView(0.0f, -1.0f);
+		}
+		if (input->isKeyPressed(Key::UP)) {
+			renderer->translateView(0.0f, 1.0f);
+		}
 
 		// Rendering.
 		renderer->clear();
-		renderer->test();
+		renderer->start();
+
+		renderer->drawTriangle(
+			Point(10, 10), 
+			Point(300, 160), 
+			Point(10, 310), 
+			Color(0.6f, 0.9f, 0.3f)
+		);
+		renderer->drawTriangle(
+			Point(450, 30), 
+			Point(470, 500), 
+			Point(590, 650), 
+			Color(0.7f, 0.1f, 0.2f)
+		);
+
+		renderer->flush();
 
 		// Swap buffers.
 		glfwSwapBuffers(window);

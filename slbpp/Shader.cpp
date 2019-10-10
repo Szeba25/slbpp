@@ -72,6 +72,10 @@ Shader::~Shader() {
 	std::cout << "OK: Shader program deleted!" << std::endl;
 }
 
+unsigned int Shader::getID() {
+	return program;
+}
+
 void Shader::use() {
 	glUseProgram(program);
 }
