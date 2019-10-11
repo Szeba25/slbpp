@@ -11,13 +11,13 @@ Renderer::Renderer() {
 	vertices = new GLfloat[2048];
 	index = 0;
 
-	// Set up VBO and VAO.
-	glGenBuffers(1, &VBO);
+	// Set up buffers.
 	glGenVertexArrays(1, &VAO);
+	glGenBuffers(1, &VBO);
 
 	glBindVertexArray(VAO);
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBufferData(GL_ARRAY_BUFFER, 2048 * sizeof(GLfloat), vertices, GL_STATIC_DRAW);
 
 	// Position.
@@ -37,6 +37,9 @@ Renderer::Renderer() {
 	shader->use();
 	glUniformMatrix4fv(glGetUniformLocation(shader->getID(), "projection"), 1, GL_FALSE, glm::value_ptr(projection));
 	glUniformMatrix4fv(glGetUniformLocation(shader->getID(), "view"), 1, GL_FALSE, glm::value_ptr(view));
+
+	// Polygon mode.
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 }
 
 Renderer::~Renderer() {
@@ -60,11 +63,9 @@ void Renderer::flush() {
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	shader->use();
-
-	glBindVertexArray(VAO);
-
 	glUniformMatrix4fv(glGetUniformLocation(shader->getID(), "view"), 1, GL_FALSE, glm::value_ptr(view));
 
+	glBindVertexArray(VAO);
 	glDrawArrays(GL_TRIANGLES, 0, index / 5);
 
 	// Unnecessary to unbind every time!
@@ -73,28 +74,6 @@ void Renderer::flush() {
 
 void Renderer::translateView(float x, float y) {
 	view = glm::translate(view, glm::vec3(x, y, 0.0f));
-}
-
-void Renderer::drawTriangle(Point a, Point b, Point c, Color color) {
-	vertices[index + 0] = a.getX();
-	vertices[index + 1] = a.getY();
-	vertices[index + 2] = color.getR();
-	vertices[index + 3] = color.getG();
-	vertices[index + 4] = color.getB();
-
-	vertices[index + 5] = b.getX();
-	vertices[index + 6] = b.getY();
-	vertices[index + 7] = color.getR();
-	vertices[index + 8] = color.getG();
-	vertices[index + 9] = color.getB();
-
-	vertices[index + 10] = c.getX();
-	vertices[index + 11] = c.getY();
-	vertices[index + 12] = color.getR();
-	vertices[index + 13] = color.getG();
-	vertices[index + 14] = color.getB();
-
-	index += 15;
 }
 
 void Renderer::drawRectangle(Point start, Point dim, Color color) {

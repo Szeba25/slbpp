@@ -20,8 +20,8 @@ private:
 	GLfloat* vertices;
 	unsigned int index;
 	
-	unsigned int VBO;
-	unsigned int VAO;
+	GLuint VAO;
+	GLuint VBO;
 
 	glm::mat4 projection;
 	glm::mat4 view;
@@ -35,7 +35,6 @@ public:
 
 	void translateView(float x, float y);
 
-	void drawTriangle(Point a, Point b, Point c, Color color);
 	void drawRectangle(Point start, Point dim, Color color);
 
 	void resize(int width, int height);
