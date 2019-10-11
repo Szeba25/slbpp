@@ -59,7 +59,15 @@ void Renderer::start() {
 
 void Renderer::flush() {
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferSubData(GL_ARRAY_BUFFER, 0, index * sizeof(GLfloat), vertices);
+
+	// 1. Buffer sub data method...
+	//glBufferSubData(GL_ARRAY_BUFFER, 0, index * sizeof(GLfloat), vertices);
+
+	// 2. Map buffer method...
+	void* pointer = glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
+	memcpy(pointer, vertices, index * sizeof(GLfloat));
+	glUnmapBuffer(GL_ARRAY_BUFFER);
+
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	shader->use();
