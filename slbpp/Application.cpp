@@ -53,6 +53,8 @@ Application::Application(GLFWwindow* window) :
 
 	updatesPerSecond = 0;
 	updateCounter = 0;
+	framesPerSecond = 0;
+	frameCounter = 0;
 	resetTime = currentTime + std::chrono::seconds(1);
 
 	input = new Input(window);
@@ -70,6 +72,9 @@ Application::Application(GLFWwindow* window) :
 
 	glfwSetFramebufferSizeCallback(window, bufferCallback);
 	glfwSetKeyCallback(window, keyCallback);
+
+	// Disable vsync.
+	//glfwSwapInterval(0);
 }
 
 Application::~Application() {
@@ -101,12 +106,15 @@ void Application::run() {
 		if (currentTime >= resetTime) {
 			updatesPerSecond = updateCounter;
 			updateCounter = 0;
+			framesPerSecond = frameCounter;
+			frameCounter = 0;
 			resetTime += std::chrono::seconds(1);
-			std::cout << "UPS: " << updatesPerSecond << std::endl;
+			std::cout << "UPS: " << updatesPerSecond << ", FPS:" << framesPerSecond << std::endl;
 		}
 
 		// Render as fast as possible.
 		render();
+		frameCounter++;
 
 		// Swap buffers.
 		glfwSwapBuffers(window);

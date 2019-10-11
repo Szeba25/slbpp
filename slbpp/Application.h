@@ -20,6 +20,8 @@ private:
 
 	int updatesPerSecond;
 	int updateCounter;
+	int framesPerSecond;
+	int frameCounter;
 	std::chrono::high_resolution_clock::time_point resetTime;
 
 	Input* input;
