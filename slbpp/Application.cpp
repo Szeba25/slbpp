@@ -22,8 +22,9 @@ void Application::render() {
 	renderer->clear();
 	renderer->start();
 
-	renderer->drawRectangle(Point(650, 150), Point(200, 100), Color(0.1f, 0.3f, 0.6f));
-	renderer->drawRectangle(Point(10, 10), Point(300, 180), Color(0.6f, 0.9f, 0.3f));
+	renderer->drawRectangle(Point(650, 150), Point(128, 128), Color(0.1f, 0.3f, 0.6f));
+	renderer->drawRectangle(Point(10, 10), Point(128, 128), Color(0.6f, 0.9f, 0.3f));
+	renderer->drawRectangle(Point(250, 400), Point(256, 256), Color(1.0f, 1.0f, 1.0f));
 
 	renderer->flush();
 }

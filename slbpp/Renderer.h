@@ -11,6 +11,7 @@
 #include <vector>
 
 #include "Shader.h"
+#include "Texture.h"
 #include "Point.h"
 #include "Color.h"
 
@@ -22,6 +23,7 @@ private:
 	
 	GLuint VAO;
 	GLuint VBO;
+	std::unique_ptr<Texture> testTexture;
 
 	glm::mat4 projection;
 	glm::mat4 view;
