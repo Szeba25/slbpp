@@ -34,6 +34,11 @@ void Application::render() {
 		Point(590, 650),
 		Color(0.7f, 0.1f, 0.2f)
 	);
+	renderer->drawRectangle(
+		Point(650, 150),
+		Point(200, 100),
+		Color(0.1f, 0.3f, 0.6f)
+	);
 
 	renderer->flush();
 }

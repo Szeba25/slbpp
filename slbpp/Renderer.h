@@ -36,6 +36,7 @@ public:
 	void translateView(float x, float y);
 
 	void drawTriangle(Point a, Point b, Point c, Color color);
+	void drawRectangle(Point start, Point dim, Color color);
 
 	void resize(int width, int height);
 };

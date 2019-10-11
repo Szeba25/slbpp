@@ -8,24 +8,23 @@ Renderer::Renderer() {
 	shader = std::make_unique<Shader>("test.vert", "test.frag");
 
 	// Initialize vertices.
-	vertices = new GLfloat[300];
+	vertices = new GLfloat[2048];
 	index = 0;
 
 	// Set up VBO and VAO.
-
 	glGenBuffers(1, &VBO);
 	glGenVertexArrays(1, &VAO);
 
 	glBindVertexArray(VAO);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 
-	glBufferData(GL_ARRAY_BUFFER, 300 * sizeof(GLfloat), vertices, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, 2048 * sizeof(GLfloat), vertices, GL_STATIC_DRAW);
 
 	// Position.
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(0));
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(0));
 	glEnableVertexAttribArray(0);
 	// Color.
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(2 * sizeof(float)));
 	glEnableVertexAttribArray(1);
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -66,7 +65,7 @@ void Renderer::flush() {
 
 	glUniformMatrix4fv(glGetUniformLocation(shader->getID(), "view"), 1, GL_FALSE, glm::value_ptr(view));
 
-	glDrawArrays(GL_TRIANGLES, 0, index / 6);
+	glDrawArrays(GL_TRIANGLES, 0, index / 5);
 
 	// Unnecessary to unbind every time!
 	//glBindVertexArray(0);
@@ -79,25 +78,65 @@ void Renderer::translateView(float x, float y) {
 void Renderer::drawTriangle(Point a, Point b, Point c, Color color) {
 	vertices[index + 0] = a.getX();
 	vertices[index + 1] = a.getY();
-	vertices[index + 2] = 0.0f;
-	vertices[index + 3] = color.getR();
-	vertices[index + 4] = color.getG();
-	vertices[index + 5] = color.getB();
+	vertices[index + 2] = color.getR();
+	vertices[index + 3] = color.getG();
+	vertices[index + 4] = color.getB();
 
-	vertices[index + 6] = b.getX();
-	vertices[index + 7] = b.getY();
-	vertices[index + 8] = 0.0f;
-	vertices[index + 9] = color.getR();
-	vertices[index + 10] = color.getG();
-	vertices[index + 11] = color.getB();
+	vertices[index + 5] = b.getX();
+	vertices[index + 6] = b.getY();
+	vertices[index + 7] = color.getR();
+	vertices[index + 8] = color.getG();
+	vertices[index + 9] = color.getB();
 
-	vertices[index + 12] = c.getX();
-	vertices[index + 13] = c.getY();
-	vertices[index + 14] = 0.0f;
-	vertices[index + 15] = color.getR();
-	vertices[index + 16] = color.getG();
-	vertices[index + 17] = color.getB();
-	index += 18;
+	vertices[index + 10] = c.getX();
+	vertices[index + 11] = c.getY();
+	vertices[index + 12] = color.getR();
+	vertices[index + 13] = color.getG();
+	vertices[index + 14] = color.getB();
+
+	index += 15;
+}
+
+void Renderer::drawRectangle(Point start, Point dim, Color color) {
+	// First triangle...
+	vertices[index + 0] = start.getX();
+	vertices[index + 1] = start.getY();
+	vertices[index + 2] = color.getR();
+	vertices[index + 3] = color.getG();
+	vertices[index + 4] = color.getB();
+
+	vertices[index + 5] = start.getX() + dim.getX();
+	vertices[index + 6] = start.getY();
+	vertices[index + 7] = color.getR();
+	vertices[index + 8] = color.getG();
+	vertices[index + 9] = color.getB();
+
+	vertices[index + 10] = start.getX();
+	vertices[index + 11] = start.getY() + dim.getY();
+	vertices[index + 12] = color.getR();
+	vertices[index + 13] = color.getG();
+	vertices[index + 14] = color.getB();
+
+	// Second triangle...
+	vertices[index + 15] = start.getX() + dim.getX();
+	vertices[index + 16] = start.getY();
+	vertices[index + 17] = color.getR();
+	vertices[index + 18] = color.getG();
+	vertices[index + 19] = color.getB();
+
+	vertices[index + 20] = start.getX();
+	vertices[index + 21] = start.getY() + dim.getY();
+	vertices[index + 22] = color.getR();
+	vertices[index + 23] = color.getG();
+	vertices[index + 24] = color.getB();
+
+	vertices[index + 25] = start.getX() + dim.getX();
+	vertices[index + 26] = start.getY() + dim.getY();
+	vertices[index + 27] = color.getR();
+	vertices[index + 28] = color.getG();
+	vertices[index + 29] = color.getB();
+
+	index += 30;
 }
 
 void Renderer::resize(int width, int height) {
