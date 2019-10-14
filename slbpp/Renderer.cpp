@@ -53,9 +53,6 @@ Renderer::Renderer() {
 	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
 
-	// Test texture...
-	testTexture = std::make_unique<Texture>("test.png");
-
 	// Matrices.
 	projection = glm::ortho(0.0f, 1280.0f, 720.0f, 0.0f, -0.1f, 0.1f);
 	view = glm::mat4(1.0f);
@@ -82,8 +79,14 @@ void Renderer::clear() {
 }
 
 void Renderer::start() {
+	// Reset indexes!
 	verticesId = 0;
 	indicesId = 0;
+}
+
+void Renderer::end() {
+	// Just flush the batch!
+	flush();
 }
 
 void Renderer::flush() {
@@ -103,19 +106,29 @@ void Renderer::flush() {
 	glUniformMatrix4fv(glGetUniformLocation(shader->getID(), "view"), 1, GL_FALSE, glm::value_ptr(view));
 
 	// bind texture!
-	testTexture->bind();
+	currentTexture->bind();
+
 	glBindVertexArray(VAO);
 	glDrawElements(GL_TRIANGLES, indicesId, GL_UNSIGNED_INT, 0);
 
 	// Unnecessary to unbind every time!
 	//glBindVertexArray(0);
+
+	// Reset indexes!
+	verticesId = 0;
+	indicesId = 0;
 }
 
 void Renderer::translateView(float x, float y) {
 	view = glm::translate(view, glm::vec3(x, y, 0.0f));
 }
 
-void Renderer::drawRectangle(Point start, Point dim, Color color) {
+void Renderer::drawTexture(std::shared_ptr<Texture>& texture, Point start, Point dim, Color color) {
+	if (currentTexture != texture && verticesId > 0) {
+		flush();
+	}
+	currentTexture = texture;
+
 	vertices[verticesId + 0] = start.getX();
 	vertices[verticesId + 1] = start.getY();
 	vertices[verticesId + 2] = color.getR();

@@ -99,7 +99,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="test.png">
+    <Image Include="grass.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="snow.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

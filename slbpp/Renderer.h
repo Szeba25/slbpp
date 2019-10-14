@@ -26,21 +26,24 @@ private:
 	GLuint VAO;
 	GLuint VBO;
 	GLuint EBO;
-	std::unique_ptr<Texture> testTexture;
+
+	std::shared_ptr<Texture> currentTexture;
 
 	glm::mat4 projection;
 	glm::mat4 view;
+
+	void flush();
 public:
 	Renderer();
 	virtual ~Renderer();
 
 	void clear();
 	void start();
-	void flush();
+	void end();
 
 	void translateView(float x, float y);
 
-	void drawRectangle(Point start, Point dim, Color color);
+	void drawTexture(std::shared_ptr<Texture>& texture, Point start, Point dim, Color color);
 
 	void resize(int width, int height);
 };

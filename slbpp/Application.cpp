@@ -22,11 +22,11 @@ void Application::render() {
 	renderer->clear();
 	renderer->start();
 
-	renderer->drawRectangle(Point(650, 150), Point(128, 128), Color(0.1f, 0.3f, 0.6f));
-	renderer->drawRectangle(Point(10, 10), Point(128, 128), Color(0.6f, 0.9f, 0.3f));
-	renderer->drawRectangle(Point(250, 400), Point(256, 256), Color(1.0f, 1.0f, 1.0f));
+	renderer->drawTexture(grass, Point(650, 150), Point(128, 128), Color(0.1f, 0.3f, 0.6f));
+	renderer->drawTexture(grass, Point(10, 10), Point(128, 128), Color(0.6f, 0.9f, 0.3f));
+	renderer->drawTexture(snow, Point(250, 400), Point(256, 256), Color(1.0f, 1.0f, 1.0f));
 
-	renderer->flush();
+	renderer->end();
 }
 
 Application::Application(GLFWwindow* window) :
@@ -45,6 +45,9 @@ Application::Application(GLFWwindow* window) :
 
 	input = new Input(window);
 	renderer = new Renderer();
+
+	grass = std::make_shared<Texture>("grass.png");
+	snow = std::make_shared<Texture>("snow.png");
 
 	glfwSetWindowUserPointer(window, this);
 

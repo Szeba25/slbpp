@@ -27,6 +27,9 @@ private:
 	Input* input;
 	Renderer* renderer;
 
+	std::shared_ptr<Texture> grass;
+	std::shared_ptr<Texture> snow;
+
 	void update();
 	void render();
 public:
