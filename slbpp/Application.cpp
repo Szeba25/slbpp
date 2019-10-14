@@ -22,11 +22,20 @@ void Application::render() {
 	renderer->clear();
 	renderer->start();
 
-	renderer->drawTexture(grass, Point(650, 150), Point(128, 128), Color(0.1f, 0.3f, 0.6f));
-	renderer->drawTexture(grass, Point(10, 10), Point(128, 128), Color(0.6f, 0.9f, 0.3f));
+	renderer->drawTexture(snow, Point(750, 500));
+	renderer->drawTexture(grass, Point(650, 150), Color(0.1f, 0.3f, 0.6f));
+	renderer->drawTexture(grass, Point(10, 10), Point(128, 128));
 	renderer->drawTexture(snow, Point(250, 400), Point(256, 256), Color(1.0f, 1.0f, 1.0f));
+	renderer->drawTexture(grass, Point(900, 20), Point(64, 64));
+
+	for (int x = 0; x < 70; x++) {
+		for (int y = 0; y < 70; y++) {
+			renderer->drawTexture(snow, Point(600 + (x*32), 600 + (y*32)));
+		}
+	}
 
 	renderer->end();
+	//renderer->printDebug();
 }
 
 Application::Application(GLFWwindow* window) :

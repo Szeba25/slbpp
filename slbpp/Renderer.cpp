@@ -8,12 +8,12 @@ Renderer::Renderer() {
 	shader = std::make_unique<Shader>("test.vert", "test.frag");
 
 	// Initialize vertices.
-	long long int maxSprites = 256;
+	maxQuads = 2048;
 
-	vertices = new GLfloat[maxSprites * 28];
-	indices = new GLuint[maxSprites * 6];
+	vertices = new GLfloat[maxQuads * 28];
+	indices = new GLuint[maxQuads * 6];
 
-	for (int i = 0; i < maxSprites; i++) {
+	for (int i = 0; i < maxQuads; i++) {
 		indices[(i * 6) + 0] = (i * 4) + 0;
 		indices[(i * 6) + 1] = (i * 4) + 1;
 		indices[(i * 6) + 2] = (i * 4) + 2;
@@ -24,6 +24,7 @@ Renderer::Renderer() {
 
 	verticesId = 0;
 	indicesId = 0;
+	drawId = 0;
 
 	// Set up buffers.
 	glGenVertexArrays(1, &VAO);
@@ -33,10 +34,10 @@ Renderer::Renderer() {
 	glBindVertexArray(VAO);
 
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, maxSprites * 42 * sizeof(GLfloat), vertices, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, maxQuads * 28 * sizeof(GLfloat), vertices, GL_STATIC_DRAW);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, maxSprites * 6 * sizeof(GLuint), indices, GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, maxQuads * 6 * sizeof(GLuint), indices, GL_STATIC_DRAW);
 
 	// Position.
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 7 * sizeof(float), (void*)(0));
@@ -56,6 +57,9 @@ Renderer::Renderer() {
 	// Matrices.
 	projection = glm::ortho(0.0f, 1280.0f, 720.0f, 0.0f, -0.1f, 0.1f);
 	view = glm::mat4(1.0f);
+
+	// Debug info.
+	drawCalls = 0;
 
 	shader->use();
 	glUniformMatrix4fv(glGetUniformLocation(shader->getID(), "projection"), 1, GL_FALSE, glm::value_ptr(projection));
@@ -82,6 +86,10 @@ void Renderer::start() {
 	// Reset indexes!
 	verticesId = 0;
 	indicesId = 0;
+	drawId = 0;
+
+	// Reset debug info!
+	drawCalls = 0;
 }
 
 void Renderer::end() {
@@ -117,16 +125,35 @@ void Renderer::flush() {
 	// Reset indexes!
 	verticesId = 0;
 	indicesId = 0;
+	drawId = 0;
+
+	// Debug info!
+	drawCalls++;
 }
 
 void Renderer::translateView(float x, float y) {
 	view = glm::translate(view, glm::vec3(x, y, 0.0f));
 }
 
+void Renderer::drawTexture(std::shared_ptr<Texture>& texture, Point start) {
+	this->drawTexture(texture, start, Point(texture->getWidth(), texture->getHeight()), Color(1.0f, 1.0f, 1.0f));
+}
+
+void Renderer::drawTexture(std::shared_ptr<Texture>& texture, Point start, Point dim) {
+	this->drawTexture(texture, start, dim, Color(1.0f, 1.0f, 1.0f));
+}
+
+void Renderer::drawTexture(std::shared_ptr<Texture>& texture, Point start, Color color) {
+	this->drawTexture(texture, start, Point(texture->getWidth(), texture->getHeight()), color);
+}
+
 void Renderer::drawTexture(std::shared_ptr<Texture>& texture, Point start, Point dim, Color color) {
-	if (currentTexture != texture && verticesId > 0) {
+	if (currentTexture != texture && drawId > 0) {
+		flush();
+	} else if (drawId >= maxQuads) {
 		flush();
 	}
+	
 	currentTexture = texture;
 
 	vertices[verticesId + 0] = start.getX();
@@ -163,8 +190,13 @@ void Renderer::drawTexture(std::shared_ptr<Texture>& texture, Point start, Point
 
 	verticesId += 28;
 	indicesId += 6;
+	drawId++;
 }
 
 void Renderer::resize(int width, int height) {
 	glViewport(0, 0, width, height);
+}
+
+void Renderer::printDebug() {
+	std::cout << "Drawcalls: " << drawCalls << std::endl;
 }

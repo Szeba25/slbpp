@@ -21,11 +21,22 @@ Texture::Texture(const std::string& fileName) :
 	}
 	
 	stbi_image_free(data);
+
+	width = w;
+	height = h;
 }
 
 Texture::~Texture() {
 	glDeleteTextures(1, &textureId);
 	std::cout << "OK: Texture deleted!" << std::endl;
+}
+
+unsigned int Texture::getWidth() {
+	return width;
+}
+
+unsigned int Texture::getHeight() {
+	return height;
 }
 
 void Texture::bind() {

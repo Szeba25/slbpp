@@ -12,9 +12,15 @@ class Texture {
 private:
 	std::string fileName;
 	GLuint textureId;
+
+	unsigned int width;
+	unsigned int height;
 public:
 	Texture(const std::string& fileName);
 	virtual ~Texture();
+
+	unsigned int getWidth();
+	unsigned int getHeight();
 
 	void bind();
 };

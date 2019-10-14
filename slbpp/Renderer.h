@@ -18,10 +18,15 @@
 class Renderer {
 private:
 	std::unique_ptr<Shader> shader;
+
+	unsigned int maxQuads;
+
 	GLfloat* vertices;
 	GLuint* indices;
+
 	unsigned int verticesId;
 	unsigned int indicesId;
+	unsigned int drawId;
 	
 	GLuint VAO;
 	GLuint VBO;
@@ -31,6 +36,8 @@ private:
 
 	glm::mat4 projection;
 	glm::mat4 view;
+
+	unsigned int drawCalls;
 
 	void flush();
 public:
@@ -43,8 +50,13 @@ public:
 
 	void translateView(float x, float y);
 
+	void drawTexture(std::shared_ptr<Texture>& texture, Point start);
+	void drawTexture(std::shared_ptr<Texture>& texture, Point start, Point dim);
+	void drawTexture(std::shared_ptr<Texture>& texture, Point start, Color color);
 	void drawTexture(std::shared_ptr<Texture>& texture, Point start, Point dim, Color color);
 
 	void resize(int width, int height);
+
+	void printDebug();
 };
 
