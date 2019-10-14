@@ -28,12 +28,6 @@ void Application::render() {
 	renderer->drawTexture(snow, Point(250, 400), Point(256, 256), Color(1.0f, 1.0f, 1.0f));
 	renderer->drawTexture(grass, Point(900, 20), Point(64, 64));
 
-	for (int x = 0; x < 70; x++) {
-		for (int y = 0; y < 70; y++) {
-			renderer->drawTexture(snow, Point(600 + (x*32), 600 + (y*32)));
-		}
-	}
-
 	renderer->end();
 	//renderer->printDebug();
 }
