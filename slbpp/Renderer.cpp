@@ -8,17 +8,35 @@ Renderer::Renderer() {
 	shader = std::make_unique<Shader>("test.vert", "test.frag");
 
 	// Initialize vertices.
-	vertices = new GLfloat[256 * 42];
-	index = 0;
+	long long int maxSprites = 256;
+
+	vertices = new GLfloat[maxSprites * 28];
+	indices = new GLuint[maxSprites * 6];
+
+	for (int i = 0; i < maxSprites; i++) {
+		indices[(i * 6) + 0] = (i * 4) + 0;
+		indices[(i * 6) + 1] = (i * 4) + 1;
+		indices[(i * 6) + 2] = (i * 4) + 2;
+		indices[(i * 6) + 3] = (i * 4) + 1;
+		indices[(i * 6) + 4] = (i * 4) + 2;
+		indices[(i * 6) + 5] = (i * 4) + 3;
+	}
+
+	verticesId = 0;
+	indicesId = 0;
 
 	// Set up buffers.
 	glGenVertexArrays(1, &VAO);
 	glGenBuffers(1, &VBO);
+	glGenBuffers(1, &EBO);
 
 	glBindVertexArray(VAO);
 
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, 256 * 42 * sizeof(GLfloat), vertices, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, maxSprites * 42 * sizeof(GLfloat), vertices, GL_STATIC_DRAW);
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, maxSprites * 6 * sizeof(GLuint), indices, GL_STATIC_DRAW);
 
 	// Position.
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 7 * sizeof(float), (void*)(0));
@@ -31,6 +49,8 @@ Renderer::Renderer() {
 	glEnableVertexAttribArray(2);
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	// Do not unbind EBO!
+	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
 
 	// Test texture...
@@ -51,7 +71,9 @@ Renderer::Renderer() {
 Renderer::~Renderer() {
 	glDeleteVertexArrays(1, &VAO);
 	glDeleteBuffers(1, &VBO);
+	glDeleteBuffers(1, &EBO);
 	delete[] vertices;
+	delete[] indices;
 }
 
 void Renderer::clear() {
@@ -60,7 +82,8 @@ void Renderer::clear() {
 }
 
 void Renderer::start() {
-	index = 0;
+	verticesId = 0;
+	indicesId = 0;
 }
 
 void Renderer::flush() {
@@ -71,7 +94,7 @@ void Renderer::flush() {
 
 	// 2. Map buffer method...
 	void* pointer = glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
-	memcpy(pointer, vertices, index * sizeof(GLfloat));
+	memcpy(pointer, vertices, verticesId * sizeof(GLfloat));
 	glUnmapBuffer(GL_ARRAY_BUFFER);
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -82,7 +105,7 @@ void Renderer::flush() {
 	// bind texture!
 	testTexture->bind();
 	glBindVertexArray(VAO);
-	glDrawArrays(GL_TRIANGLES, 0, index / 7);
+	glDrawElements(GL_TRIANGLES, indicesId, GL_UNSIGNED_INT, 0);
 
 	// Unnecessary to unbind every time!
 	//glBindVertexArray(0);
@@ -93,57 +116,40 @@ void Renderer::translateView(float x, float y) {
 }
 
 void Renderer::drawRectangle(Point start, Point dim, Color color) {
-	// First triangle...
-	vertices[index + 0] = start.getX();
-	vertices[index + 1] = start.getY();
-	vertices[index + 2] = color.getR();
-	vertices[index + 3] = color.getG();
-	vertices[index + 4] = color.getB();
-	vertices[index + 5] = 0.0f;
-	vertices[index + 6] = 0.0f;
+	vertices[verticesId + 0] = start.getX();
+	vertices[verticesId + 1] = start.getY();
+	vertices[verticesId + 2] = color.getR();
+	vertices[verticesId + 3] = color.getG();
+	vertices[verticesId + 4] = color.getB();
+	vertices[verticesId + 5] = 0.0f;
+	vertices[verticesId + 6] = 0.0f;
 
-	vertices[index + 7] = start.getX() + dim.getX();
-	vertices[index + 8] = start.getY();
-	vertices[index + 9] = color.getR();
-	vertices[index + 10] = color.getG();
-	vertices[index + 11] = color.getB();
-	vertices[index + 12] = 1.0f;
-	vertices[index + 13] = 0.0f;
+	vertices[verticesId + 7] = start.getX() + dim.getX();
+	vertices[verticesId + 8] = start.getY();
+	vertices[verticesId + 9] = color.getR();
+	vertices[verticesId + 10] = color.getG();
+	vertices[verticesId + 11] = color.getB();
+	vertices[verticesId + 12] = 1.0f;
+	vertices[verticesId + 13] = 0.0f;
 
-	vertices[index + 14] = start.getX();
-	vertices[index + 15] = start.getY() + dim.getY();
-	vertices[index + 16] = color.getR();
-	vertices[index + 17] = color.getG();
-	vertices[index + 18] = color.getB();
-	vertices[index + 19] = 0.0f;
-	vertices[index + 20] = 1.0f;
+	vertices[verticesId + 14] = start.getX();
+	vertices[verticesId + 15] = start.getY() + dim.getY();
+	vertices[verticesId + 16] = color.getR();
+	vertices[verticesId + 17] = color.getG();
+	vertices[verticesId + 18] = color.getB();
+	vertices[verticesId + 19] = 0.0f;
+	vertices[verticesId + 20] = 1.0f;
 
-	// Second triangle...
-	vertices[index + 21] = start.getX() + dim.getX();
-	vertices[index + 22] = start.getY();
-	vertices[index + 23] = color.getR();
-	vertices[index + 24] = color.getG();
-	vertices[index + 25] = color.getB();
-	vertices[index + 26] = 1.0f;
-	vertices[index + 27] = 0.0f;
+	vertices[verticesId + 21] = start.getX() + dim.getX();
+	vertices[verticesId + 22] = start.getY() + dim.getY();
+	vertices[verticesId + 23] = color.getR();
+	vertices[verticesId + 24] = color.getG();
+	vertices[verticesId + 25] = color.getB();
+	vertices[verticesId + 26] = 1.0f;
+	vertices[verticesId + 27] = 1.0f;
 
-	vertices[index + 28] = start.getX();
-	vertices[index + 29] = start.getY() + dim.getY();
-	vertices[index + 30] = color.getR();
-	vertices[index + 31] = color.getG();
-	vertices[index + 32] = color.getB();
-	vertices[index + 33] = 0.0f;
-	vertices[index + 34] = 1.0f;
-
-	vertices[index + 35] = start.getX() + dim.getX();
-	vertices[index + 36] = start.getY() + dim.getY();
-	vertices[index + 37] = color.getR();
-	vertices[index + 38] = color.getG();
-	vertices[index + 39] = color.getB();
-	vertices[index + 40] = 1.0f;
-	vertices[index + 41] = 1.0f;
-
-	index += 42;
+	verticesId += 28;
+	indicesId += 6;
 }
 
 void Renderer::resize(int width, int height) {

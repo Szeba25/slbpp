@@ -19,10 +19,13 @@ class Renderer {
 private:
 	std::unique_ptr<Shader> shader;
 	GLfloat* vertices;
-	unsigned int index;
+	GLuint* indices;
+	unsigned int verticesId;
+	unsigned int indicesId;
 	
 	GLuint VAO;
 	GLuint VBO;
+	GLuint EBO;
 	std::unique_ptr<Texture> testTexture;
 
 	glm::mat4 projection;

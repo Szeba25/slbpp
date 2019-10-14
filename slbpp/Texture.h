@@ -11,7 +11,7 @@
 class Texture {
 private:
 	std::string fileName;
-	GLuint textureID;
+	GLuint textureId;
 public:
 	Texture(const std::string& fileName);
 	virtual ~Texture();
